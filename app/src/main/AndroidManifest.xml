@@ -10,10 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service
-            android:name=".services.MainService"
-            android:enabled="true"
-            android:exported="true">
+        <service android:name=".services.MessengerService"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <!-- Service name -->
+                <action android:name="com.robocore.mytemiservice.services.MessengerService" />
+            </intent-filter>
         </service>
 
         <activity android:name=".activities.MainActivity">
