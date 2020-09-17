@@ -25,26 +25,30 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Initialize();
+        initialize();
         Intent intent = new Intent(this, CheckPermissionsActivity.class);
         startActivityForResult(intent, PERMISSION_REQUEST_CODE);
     }
 
     @Override
     protected void onStart() {
+        Log.d(TAG, "onStart()");
         super.onStart();
     }
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "onDestroy()");
         super.onDestroy();
-        Release();
+        release();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.d(TAG, "onActivityResult()");
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
@@ -56,10 +60,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private static void Initialize() {
+    private static void initialize() {
+        Log.d(TAG, "initialize()");
         permit = false;
     }
-    private static void Release() {
+    private static void release() {
+        Log.d(TAG, "release()");
 
     }
 
@@ -67,8 +73,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "startMessengerService()");
         // use this to start and trigger a service
         Intent i = new Intent(MainActivity.this, MessengerService.class);
-        // potentially add data to the intent
-//        i.putExtra("KEY1", "Value to be used by the service");
         startService(i);
     }
 

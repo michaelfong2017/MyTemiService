@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -14,11 +13,11 @@ import android.util.Log;
 import com.robocore.objectfollowing.secretcamera.listeners.OnImageProcessedListener;
 import com.robocore.objectfollowing.secretcamera.services.CameraService;
 
+import java.io.ByteArrayOutputStream;
+
 public class MessengerService extends Service implements OnImageProcessedListener {
 
     private static final String TAG = MessengerService.class.getSimpleName();
-
-//    public OnImageProcessedListener onImageProcessedListener;
 
     /**
      * Command to the service to display a message
@@ -29,12 +28,13 @@ public class MessengerService extends Service implements OnImageProcessedListene
     // secretcamera api
     private CameraService cameraService;
     private static String cameraID = "1";
+    private static boolean canSendImage = false;
 
 
     /**
      * Handler of incoming messages from clients.
      */
-    static class IncomingHandler extends Handler {
+    class IncomingHandler extends Handler {
         private Context applicationContext;
 
         IncomingHandler(Context context) {
@@ -45,10 +45,10 @@ public class MessengerService extends Service implements OnImageProcessedListene
         public void handleMessage(Message msg) {
             Log.d(TAG, "handleMessage()");
             Log.d(TAG, "msg.what: "+msg.what);
-//            ((MessengerService)applicationContext).onImageProcessedListener = (OnImageProcessedListener)msg.obj;
             switch (msg.what) {
                 case MSG_SAY_HELLO:
                     Log.d(TAG, "hello!");
+                    canSendImage = true;
                     break;
                 default:
                     super.handleMessage(msg);
@@ -80,22 +80,47 @@ public class MessengerService extends Service implements OnImageProcessedListene
         cameraService.setCamera(cameraID);
         cameraService.setOnImageProcessedListener(this);
         cameraService.startSecretCamera();
+        initialize();
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
+        Log.d(TAG, "onDestroy()");
         super.onDestroy();
         if (cameraService != null) {
             cameraService.closeSecretCamera();
         }
+        release();
+    }
+
+    private static void initialize() {
+        Log.d(TAG, "initialize()");
+
+    }
+    private static void release() {
+        Log.d(TAG, "release()");
+        canSendImage = false;
     }
 
     @Override
     public void onImageProcessed(Bitmap imageBitmap) {
         Log.d(TAG, "onImageProcessed()");
-//        if (onImageProcessedListener != null) {
-//            onImageProcessedListener.onImageProcessed(imageBitmap);
-//        }
+        if (canSendImage) {
+            sendData(imageBitmap);
+        }
+    }
+
+    private void sendData(Bitmap imageBitmap) {
+        Log.d(TAG, "sendData()");
+        //Convert to byte array
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        Intent intent = new Intent();
+        intent.setAction("com.robocore.androidtesting.SECRET_CAMERA");
+        intent.putExtra("image", byteArray);
+        sendBroadcast(intent);
     }
 }
