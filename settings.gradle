@@ -1,2 +1,3 @@
+include ':broadcastutil'
 include ':app'
 rootProject.name = "MyTemiService"

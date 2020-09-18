@@ -44,15 +44,8 @@ public class MessengerService extends Service implements OnImageProcessedListene
         @Override
         public void handleMessage(Message msg) {
             Log.d(TAG, "handleMessage()");
-            Log.d(TAG, "msg.what: "+msg.what);
-            switch (msg.what) {
-                case MSG_SAY_HELLO:
-                    Log.d(TAG, "hello!");
-                    canSendImage = true;
-                    break;
-                default:
-                    super.handleMessage(msg);
-            }
+            Log.d(TAG, "msg.obj: "+msg.obj);
+            canSendImage = true;
         }
     }
 
