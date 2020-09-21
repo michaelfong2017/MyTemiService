@@ -45,8 +45,6 @@ public class BroadcastReceiverRegistry {
 
     public static void registerBroadcastReceiver(Context context, Messenger mService, BroadcastReceiver broadcastReceiver) {
         Log.d(TAG, "registerBroadcastReceiver()");
-        String packageName = context.getPackageName();
-        Log.d(TAG, "packageName: " + packageName);
         Log.d(TAG, "broadcastReceiver: " + broadcastReceiver);
         String actionName = "";
         if (broadcastReceiver instanceof SecretCameraBroadcastReceiver) {
@@ -60,7 +58,7 @@ public class BroadcastReceiverRegistry {
         /**
          * Registration
          */
-        IntentFilter filter = new IntentFilter(packageName + "." + actionName);
+        IntentFilter filter = new IntentFilter(actionName);
         filter.addAction(actionName);
         context.registerReceiver(broadcastReceiver, filter);
 
@@ -69,7 +67,7 @@ public class BroadcastReceiverRegistry {
          * Notify MyTemiService about the registration
          */
         Bundle bundle = new Bundle();
-        bundle.putString("action", packageName + "." + actionName);
+        bundle.putString("action", actionName);
         Message msg = Message.obtain();
         msg.obj = bundle;
         try {
@@ -81,8 +79,6 @@ public class BroadcastReceiverRegistry {
 
     public static void unregisterBroadcastReceiver(Context context, BroadcastReceiver broadcastReceiver) {
         Log.d(TAG, "unregisterBroadcastReceiver()");
-        String packageName = context.getPackageName();
-        Log.d(TAG, "packageName: " + packageName);
         Log.d(TAG, "broadcastReceiver: " + broadcastReceiver);
         context.unregisterReceiver(broadcastReceiver);
 

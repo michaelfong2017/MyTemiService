@@ -112,7 +112,7 @@ public class MessengerService extends Service implements OnImageProcessedListene
         byte[] byteArray = stream.toByteArray();
 
         Intent intent = new Intent();
-        intent.setAction("com.robocore.androidtesting.SECRET_CAMERA");
+        intent.setAction("SECRET_CAMERA");
         intent.putExtra("image", byteArray);
         sendBroadcast(intent);
     }
