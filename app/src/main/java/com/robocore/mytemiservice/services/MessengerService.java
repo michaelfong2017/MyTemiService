@@ -3,17 +3,15 @@ package com.robocore.mytemiservice.services;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
 
-import com.robocore.objectfollowing.secretcamera.listeners.OnImageProcessedListener;
-import com.robocore.objectfollowing.secretcamera.services.CameraService;
+import com.robocore.secretcamera.CameraService;
+import com.robocore.secretcamera.OnImageProcessedListener;
 
-import java.io.ByteArrayOutputStream;
 
 public class MessengerService extends Service implements OnImageProcessedListener {
 
@@ -26,7 +24,6 @@ public class MessengerService extends Service implements OnImageProcessedListene
 
 
     // secretcamera api
-    private CameraService cameraService;
     private static String cameraID = "1";
     private static boolean canSendImage = false;
 
@@ -69,10 +66,10 @@ public class MessengerService extends Service implements OnImageProcessedListene
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand()");
-        cameraService = new CameraService(this);
-        cameraService.setCamera(cameraID);
-        cameraService.setOnImageProcessedListener(this);
-        cameraService.startSecretCamera();
+        CameraService.getInstance().initialize(getApplicationContext());
+        CameraService.getInstance().setCamera(cameraID);
+        CameraService.getInstance().setOnImageProcessedListener(this);
+        CameraService.getInstance().startSecretCamera();
         initialize();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -81,9 +78,8 @@ public class MessengerService extends Service implements OnImageProcessedListene
     public void onDestroy() {
         Log.d(TAG, "onDestroy()");
         super.onDestroy();
-        if (cameraService != null) {
-            cameraService.closeSecretCamera();
-        }
+        CameraService.getInstance().closeSecretCamera();
+        CameraService.clear();
         release();
     }
 
@@ -97,23 +93,18 @@ public class MessengerService extends Service implements OnImageProcessedListene
     }
 
     @Override
-    public void onImageProcessed(Bitmap imageBitmap) {
+    public void onImageProcessed(byte[] imageBytes) {
         Log.d(TAG, "onImageProcessed()");
         if (canSendImage) {
-            sendData(imageBitmap);
+            sendData(imageBytes);
         }
     }
 
-    private void sendData(Bitmap imageBitmap) {
+    private void sendData(byte[] imageBytes) {
         Log.d(TAG, "sendData()");
-        //Convert to byte array
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-
         Intent intent = new Intent();
         intent.setAction("SECRET_CAMERA");
-        intent.putExtra("image", byteArray);
+        intent.putExtra("image", imageBytes);
         sendBroadcast(intent);
     }
 }

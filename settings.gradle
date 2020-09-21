@@ -1,3 +1,5 @@
+include ':permissionutil'
+include ':secretcamera'
 include ':broadcastutil'
 include ':app'
 rootProject.name = "MyTemiService"

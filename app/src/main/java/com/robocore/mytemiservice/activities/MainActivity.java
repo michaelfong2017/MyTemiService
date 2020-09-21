@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.robocore.mytemiservice.R;
 import com.robocore.mytemiservice.services.MessengerService;
-import com.robocore.objectfollowing.secretcamera.activities.CheckPermissionsActivity;
+import com.robocore.permissionutil.CheckPermissionsActivity;
 
 public class MainActivity extends AppCompatActivity {
 

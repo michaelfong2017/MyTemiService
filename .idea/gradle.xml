@@ -13,6 +13,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/broadcastutil" />
+            <option value="$PROJECT_DIR$/permissionutil" />
+            <option value="$PROJECT_DIR$/secretcamera" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
