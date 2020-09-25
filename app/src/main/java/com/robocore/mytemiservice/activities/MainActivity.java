@@ -7,8 +7,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.GridView;
 
 import com.robocore.mytemiservice.R;
+import com.robocore.mytemiservice.adapters.GridsAdapter;
+import com.robocore.mytemiservice.models.Grid;
 import com.robocore.mytemiservice.services.MessengerService;
 import com.robocore.permissionutil.CheckPermissionsActivity;
 
@@ -23,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 102;
     private static boolean permit;
 
+    private int[] grids = {R.drawable.green_grid, R.drawable.green_grid, R.drawable.green_grid,
+            R.drawable.green_grid, R.drawable.green_grid, R.drawable.green_grid};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate()");
@@ -31,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
         initialize();
         Intent intent = new Intent(this, CheckPermissionsActivity.class);
         startActivityForResult(intent, PERMISSION_REQUEST_CODE);
+
+//        GridView gridView = (GridView)findViewById(R.id.gridview);
+//        GridsAdapter gridsAdapter = new GridsAdapter(this, grids);
+//        gridView.setAdapter(gridsAdapter);
+
     }
 
     @Override
