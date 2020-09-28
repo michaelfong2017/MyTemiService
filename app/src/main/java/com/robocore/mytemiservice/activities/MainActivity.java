@@ -7,11 +7,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
 import com.robocore.mytemiservice.R;
-import com.robocore.mytemiservice.adapters.GridsAdapter;
-import com.robocore.mytemiservice.models.Grid;
 import com.robocore.mytemiservice.services.MessengerService;
 import com.robocore.permissionutil.CheckPermissionsActivity;
 
@@ -26,21 +26,25 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 102;
     private static boolean permit;
 
-    private int[] grids = {R.drawable.green_grid, R.drawable.green_grid, R.drawable.green_grid,
-            R.drawable.green_grid, R.drawable.green_grid, R.drawable.green_grid};
+    /**
+     * TableLayout
+     */
+    private TableLayout tableLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initialize();
+
+        // Permissions
+        permit = false;
         Intent intent = new Intent(this, CheckPermissionsActivity.class);
         startActivityForResult(intent, PERMISSION_REQUEST_CODE);
 
-//        GridView gridView = (GridView)findViewById(R.id.gridview);
-//        GridsAdapter gridsAdapter = new GridsAdapter(this, grids);
-//        gridView.setAdapter(gridsAdapter);
+        // Initialize
+        initialize();
 
     }
 
@@ -71,13 +75,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private static void initialize() {
+    private void initialize() {
         Log.d(TAG, "initialize()");
-        permit = false;
+        initializeTableLayout();
     }
-    private static void release() {
-        Log.d(TAG, "release()");
+    private void initializeTableLayout() {
+        Log.d(TAG, "initializeTableLayout()");
+        tableLayout = (TableLayout)findViewById(R.id.table_layout);
+        for (int i = 0; i < 3; i++) {
+            TableRow tableRow = new TableRow(this);
+            for (int j = 0; j < 4; j++) {
+                ImageView imageView = new ImageView(this);
+                imageView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT));
+                imageView.setBackgroundResource(R.drawable.green_grid);
 
+                tableRow.addView(imageView);
+            }
+            tableLayout.addView(tableRow);
+        }
+    }
+
+    private void release() {
+        Log.d(TAG, "release()");
     }
 
     private void startMessengerService() {
