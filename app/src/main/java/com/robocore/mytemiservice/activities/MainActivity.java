@@ -7,11 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import com.robocore.mytemiservice.R;
+import com.robocore.mytemiservice.controllers.GridsController;
 import com.robocore.mytemiservice.services.MessengerService;
 import com.robocore.permissionutil.CheckPermissionsActivity;
 
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * TableLayout
      */
-    private TableLayout tableLayout;
+    GridsController gridsController;
 
 
     @Override
@@ -77,22 +79,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initialize() {
         Log.d(TAG, "initialize()");
-        initializeTableLayout();
-    }
-    private void initializeTableLayout() {
-        Log.d(TAG, "initializeTableLayout()");
-        tableLayout = (TableLayout)findViewById(R.id.table_layout);
-        for (int i = 0; i < 3; i++) {
-            TableRow tableRow = new TableRow(this);
-            for (int j = 0; j < 4; j++) {
-                ImageView imageView = new ImageView(this);
-                imageView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT));
-                imageView.setBackgroundResource(R.drawable.green_grid);
-
-                tableRow.addView(imageView);
-            }
-            tableLayout.addView(tableRow);
-        }
+        gridsController = new GridsController(this);
+        gridsController.initializeTableLayout();
     }
 
     private void release() {
