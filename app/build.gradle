@@ -35,8 +35,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     implementation 'com.robocore:mytemiservice.permissionutil:1.0.0'
-//    implementation 'com.robocore:mytemiservice.secretcamera:1.0.2'
-    implementation project(':secretcamera')
+    implementation 'com.robocore:mytemiservice.secretcamera:1.0.3'
+//    implementation project(':secretcamera')
 
     implementation 'com.google.android:flexbox:0.3.2'
 

@@ -8,14 +8,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import com.robocore.mytemiservice.R;
-import com.robocore.secretcamera.AutoFitTextureView;
 import com.robocore.secretcamera.CameraService;
 import com.robocore.secretcamera.OnImageProcessedListener;
 

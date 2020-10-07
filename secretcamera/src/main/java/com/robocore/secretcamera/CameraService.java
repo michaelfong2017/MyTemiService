@@ -59,7 +59,7 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-public class CameraService extends Fragment implements ImageReader.OnImageAvailableListener {
+public class CameraService implements ImageReader.OnImageAvailableListener {
 
     private static final String TAG = CameraService.class.getSimpleName();
 
@@ -234,6 +234,9 @@ public class CameraService extends Fragment implements ImageReader.OnImageAvaila
      * An {@link AutoFitTextureView} for camera preview.
      */
     private AutoFitTextureView textureView;
+    private void setTextureView(AutoFitTextureView textureView) {
+        this.textureView = textureView;
+    }
 
     /** The rotation in degrees of the camera sensor from the display. */
     private Integer sensorOrientation;
@@ -250,7 +253,7 @@ public class CameraService extends Fragment implements ImageReader.OnImageAvaila
                 @Override
                 public void onSurfaceTextureAvailable(
                         final SurfaceTexture texture, final int width, final int height) {
-                    Log.d(TAG, "onSurfaceTextureAvailable");
+                    Log.d(TAG, "onSurfaceTextureAvailable()");
                     openCamera(width, height);
                 }
 
@@ -258,35 +261,27 @@ public class CameraService extends Fragment implements ImageReader.OnImageAvaila
                 public void onSurfaceTextureSizeChanged(
                         final SurfaceTexture texture, final int width, final int height) {
                     configureTransform(width, height);
+                    Log.d(TAG, "onSurfaceTextureSizeChanged()");
                 }
 
                 @Override
                 public boolean onSurfaceTextureDestroyed(final SurfaceTexture texture) {
+                    Log.d(TAG, "onSurfaceTextureDestroyed()");
                     return true;
                 }
 
                 @Override
                 public void onSurfaceTextureUpdated(final SurfaceTexture texture) {
+                    Log.d(TAG, "onSurfaceTextureUpdated()");
                 }
             };
 
-    @Override
-    public View onCreateView(
-            final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.secretcamera_fragment_camera, container, false);
-    }
-
-    @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        textureView = (AutoFitTextureView) view.findViewById(R.id.secretcamera_texture_view);
-
-        startPreviewCamera();
-    }
-
-    private void startPreviewCamera() {
+    public void startPreviewCamera(AutoFitTextureView textureView) {
         Log.d(TAG, "startPreviewCamera()");
         setHasPreview(true);
         isProcessingFrame = false;
+
+        setTextureView(textureView);
 
         startBackgroundThread();
         if (textureView.isAvailable()) {
@@ -547,9 +542,13 @@ public class CameraService extends Fragment implements ImageReader.OnImageAvaila
             }
             previewReader = ImageReader.newInstance(720, 480, ImageFormat.YUV_420_888, 2);
             previewReader.setOnImageAvailableListener(this, backgroundHandler);
+            /** Preview
+             *
+             */
             if (!hasPreview) {
                 previewRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
             }
+
             previewRequestBuilder.addTarget(previewReader.getSurface());
 
             final List<Surface> outputSurfaces = new ArrayList<>();

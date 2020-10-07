@@ -68,14 +68,7 @@ public class MainActivity extends AppCompatActivity implements OnImageProcessedL
         CameraService.getInstance().initialize(this);
         CameraService.getInstance().setCamera("1");
         CameraService.getInstance().setOnImageProcessedListener(this);
-
-
-        // CameraFragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container_main, CameraService.getInstance());
-        fragmentTransaction.commit();
-
+        CameraService.getInstance().startPreviewCamera(findViewById(R.id.secretcamera_texture_view));
 
     }
 
