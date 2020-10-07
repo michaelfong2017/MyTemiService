@@ -1,11 +1,19 @@
 package com.robocore.mytemiservice.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Camera;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -16,8 +24,10 @@ import com.robocore.mytemiservice.R;
 import com.robocore.mytemiservice.controllers.GridsController;
 import com.robocore.mytemiservice.services.MessengerService;
 import com.robocore.permissionutil.CheckPermissionsActivity;
+import com.robocore.secretcamera.CameraService;
+import com.robocore.secretcamera.OnImageProcessedListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnImageProcessedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -54,6 +64,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         Log.d(TAG, "onStart()");
         super.onStart();
+
+        CameraService.getInstance().initialize(this);
+        CameraService.getInstance().setCamera("1");
+        CameraService.getInstance().setOnImageProcessedListener(this);
+
+
+        // CameraFragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container_main, CameraService.getInstance());
+        fragmentTransaction.commit();
+
+
     }
 
     @Override
@@ -106,5 +129,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "stopPressed()");
         Intent i = new Intent(MainActivity.this, MessengerService.class);
         stopService(i);
+    }
+
+    @Override
+    public void onImageProcessed(byte[] imageBytes) {
+        Log.d(TAG, "onImageProcessed()");
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        Log.d(TAG, ""+decodedByte);
     }
 }
